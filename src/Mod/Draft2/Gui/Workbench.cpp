@@ -24,11 +24,11 @@
 #include "Gui/MenuManager.h"
 #include "Gui/ToolBarManager.h"
 
-using namespace DraftGui;
+using namespace Draft2Gui;
 
 
-/// @namespace DraftGui @class Workbench
-TYPESYSTEM_SOURCE(DraftGui::Workbench, Gui::StdWorkbench)
+/// @namespace Draft2Gui @class Workbench
+TYPESYSTEM_SOURCE(Draft2Gui::Workbench, Gui::StdWorkbench)
 
 
 Workbench::Workbench(){}

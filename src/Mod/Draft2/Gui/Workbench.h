@@ -28,7 +28,7 @@
 
 
 
-namespace DraftGui {
+namespace Draft2Gui {
 
 ///
 ///  @author Hartmuth Gutsche
