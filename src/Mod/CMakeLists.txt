@@ -64,6 +64,7 @@ endif(BUILD_MESH_PART)
 
 if(BUILD_DRAFT)
   add_subdirectory(Draft)
+  add_subdirectory(Draft2)
 endif(BUILD_DRAFT)
 
 if(BUILD_WEB)

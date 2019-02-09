@@ -38,3 +38,4 @@ tags
 
 # crowdin file
 src/Tools/freecad.zip
+/src/Build/*
