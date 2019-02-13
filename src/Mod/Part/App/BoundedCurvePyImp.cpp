@@ -1,5 +1,5 @@
 /***************************************************************************
- *   Copyright (c) Jürgen Riegel          (juergen.riegel@web.de) 2002     *
+ *   Copyright (c) 2019 Abdullah Tahiri <abdullah.tahiri.yo@gmail.com      *
  *                                                                         *
  *   This file is part of the FreeCAD CAx development system.              *
  *                                                                         *
@@ -23,56 +23,55 @@
 
 #include "PreCompiled.h"
 #ifndef _PreComp_
-# include <qlineedit.h>
+# include <sstream>
 #endif
 
-#include <Gui/FileDialog.h>
-#include <Gui/MainWindow.h>
-#include "DlgPartImportStepImp.h"
+#include <Base/GeometryPyCXX.h>
+#include <Base/VectorPy.h>
 
-using namespace PartGui;
+#include "Geometry.h"
+#include "BoundedCurvePy.h"
+#include "BoundedCurvePy.cpp"
 
-/* TRANSLATOR PartGui::DlgPartImportStepImp */
 
-/* 
- *  Constructs a DlgPartImportStep which is a child of 'parent', with the 
- *  name 'name' and widget flags set to 'f' 
- *
- *  The dialog will by default be modeless, unless you set 'modal' to
- *  true to construct a modal dialog.
- */
-DlgPartImportStepImp::DlgPartImportStepImp( QWidget* parent, Qt::WindowFlags fl )
-    : QDialog( parent, fl )
+using namespace Part;
+
+// returns a string which represents the object e.g. when printed in python
+std::string BoundedCurvePy::representation(void) const
 {
-    this->setupUi(this);
+    return "<Curve object>";
 }
 
-/*  
- *  Destroys the object and frees any allocated resources
- */
-DlgPartImportStepImp::~DlgPartImportStepImp()
+PyObject *BoundedCurvePy::PyMake(struct _typeobject *, PyObject *, PyObject *)  // Python wrapper
 {
-    // no need to delete child widgets, Qt does it all for us
+    // never create such objects with the constructor
+    PyErr_SetString(PyExc_RuntimeError,
+                    "You cannot create an instance of the abstract class 'BoundedCurve'.");
+    return 0;
 }
 
-/* 
- * public slot
- */
-void DlgPartImportStepImp::OnApply()
+// constructor method
+int BoundedCurvePy::PyInit(PyObject* /*args*/, PyObject* /*kwd*/)
 {
-    qWarning( "DlgPartImportStepImp::OnApply() not yet implemented!" ); 
+    return 0;
 }
 
-void DlgPartImportStepImp::onChooseFileName()
+Py::Object BoundedCurvePy::getStartPoint(void) const
 {
-    QString fn = Gui::FileDialog::getOpenFileName(Gui::getMainWindow(), QString::null, QString::null,
-        QString::fromLatin1("%1 (*.stp *.step);;%2 (*.*)"))
-        .arg(tr("STEP"),
-             tr("All Files"));
-    if (!fn.isEmpty()) {
-        FileName->setText(fn);
-    }
+    return Py::Vector(getGeomBoundedCurvePtr()->getStartPoint());
 }
 
+Py::Object BoundedCurvePy::getEndPoint(void) const
+{
+    return Py::Vector(getGeomBoundedCurvePtr()->getEndPoint());
+}
 
-#include "moc_DlgPartImportStepImp.cpp"
+PyObject *BoundedCurvePy::getCustomAttributes(const char* /*attr*/) const
+{
+    return 0;
+}
+
+int BoundedCurvePy::setCustomAttributes(const char* /*attr*/, PyObject* /*obj*/)
+{
+    return 0;
+}
