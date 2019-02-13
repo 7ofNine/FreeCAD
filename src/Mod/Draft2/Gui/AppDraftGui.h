@@ -27,7 +27,7 @@
 
 #include <CXX/Extensions.hxx>
 
-namespace DraftGui {
+namespace Draft2Gui {
 
 class Module : public Py::ExtensionModule<Module>
 {

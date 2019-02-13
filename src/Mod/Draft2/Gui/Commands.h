@@ -27,7 +27,9 @@
 
 #include "Gui/Command.h"
 
-namespace DraftGui {
+namespace Draft2Gui {
+
+    DEF_STD_CMD_A(CmdDraftSelectPlane)
 
     // standard creation commands
     DEF_STD_CMD_A(CmdDraftMakeLine);

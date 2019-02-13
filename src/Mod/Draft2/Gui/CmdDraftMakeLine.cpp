@@ -23,7 +23,7 @@
 #include "Commands.h"
 
 #include "QGlobalStatic"
-namespace DraftGui {
+namespace Draft2Gui {
 
     CmdDraftMakeLine::CmdDraftMakeLine()
         :Command("Draft_MakeLine")
@@ -35,7 +35,7 @@ namespace DraftGui {
         sWhatsThis = getName();
         sStatusTip = sToolTipText;
         sPixmap = "Draft_Line";
-        sAccel = "L,I";
+        sAccel = "L, I";
     }
 
     void CmdDraftMakeLine::activated(int)
@@ -45,7 +45,7 @@ namespace DraftGui {
 
     bool CmdDraftMakeLine::isActive(void)
     {
-        return false;
+        return hasActiveDocument();
     }
 
 }

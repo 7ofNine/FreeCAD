@@ -5,6 +5,7 @@ include_directories(
     ${CMAKE_CURRENT_SOURCE_DIR}
     ${PYTHON_INCLUDE_DIRS}
     ${QT_INCLUDE_DIR}
+	${XercesC_INCLUDE_DIRS}
 )
 
 
@@ -23,9 +24,10 @@ set(Draft2Gui_SOURCES
     AppDraftGui.cpp
     CmdDraftMakeLine.cpp
     CmdDraftMakeWire.cpp
+	CmdDraftSelectPlane.cpp
 )
 
-source_group("Application" FILES ${Draft2Gui_SOURCES})
+# source_group("Application" FILES ${Draft2Gui_SOURCES})
 
 # Header files
 set(Draft2Gui_HEADERS
@@ -38,7 +40,7 @@ set(Draft2Gui_HEADERS
 source_group("Headers" FILES ${Draft2Gui_HEADERS})
 
 # Scripts
-set(Draft2Gui_INIT initGui.py)    
+set(Draft2Gui_INIT InitGui.py)    
 set(Draft2Gui_SCRIPTS
     ../${Draft2Gui_INIT})
 
@@ -59,19 +61,19 @@ set(Draft2Gui_LIBS
 add_library(Draft2Gui SHARED ${Draft2Gui_SOURCES})
 target_link_libraries(Draft2Gui ${Draft2Gui_LIBS})
 target_sources(Draft2Gui  PRIVATE ${Draft2Gui_HEADERS} PRIVATE ${Draft2Gui_SCRIPTS} PRIVATE ${Draft2Gui_LICENSE} )
+SET_PYTHON_PREFIX_SUFFIX(Draft2Gui) # change .dll to .pyd
+
+# set up the target directory for the binaries (dll)
+SET_BIN_DIR(Draft2Gui Draft2Gui /Mod/Draft2) # what does that really do ?
+
+INSTALL(TARGETS Draft2Gui DESTINATION ${CMAKE_INSTALL_LIBDIR})
+
 
 fc_target_copy_resource(Draft2Gui ${CMAKE_SOURCE_DIR}/src/Mod/Draft2 ${CMAKE_BINARY_DIR}/Mod/Draft2 ${Draft2Gui_INIT})
 
-
 # setup the module icon
-SET(DraftGuiIcon_SVG
-    Resources/icons/DraftWorkbench.svg
-)
+SET(DraftGuiIcon_SVG Resources/icons/DraftWorkbench.svg)
 fc_copy_sources(Draft2Gui "${CMAKE_BINARY_DIR}/${CMAKE_INSTALL_DATADIR}/Mod/Draft2" ${DraftGuiIcon_SVG})
+INSTALL(FILES ${DraftGuiIcon_SVG} DESTINATION "${CMAKE_INSTALL_DATADIR}/Mod/Draft2/Resources/icons")
 
 
-
-# set up the target directory for the binaries (dll)
-SET_BIN_DIR(Draft2Gui Draft2Gui /Mod/Draft2)
-
-SET_PYTHON_PREFIX_SUFFIX(Draft2Gui) # change .dll to .pyd

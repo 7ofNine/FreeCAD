@@ -31,7 +31,7 @@
 //using namespace DraftGui;
 
 // TODO: rename back to Draft when done
-namespace DraftGui {
+namespace Draft2Gui {
 
 Module::Module():Py::ExtensionModule<Module>("Draft2Gui")
 {
@@ -43,7 +43,7 @@ Module::~Module(){}
 
 void Module::initModule()
 {
-    DraftGui::Workbench::init();
+    Workbench::init();
 
     createCommands();
 }
@@ -51,6 +51,7 @@ void Module::initModule()
 void Module::createCommands()
 {
     Gui::CommandManager &commandManager = Gui::Application::Instance->commandManager();
+    commandManager.addCommand(new CmdDraftSelectPlane);
     commandManager.addCommand(new CmdDraftMakeLine);
     commandManager.addCommand(new CmdDraftMakeWire);
 
@@ -83,7 +84,7 @@ PyMOD_INIT_FUNC(Draft2Gui)
 //        PyMOD_Return(0);
 //    }
 
-      PyObject* draftGuiModule = DraftGui::initModule();
+      PyObject* draftGuiModule = Draft2Gui::initModule();
 
     Base::Console().Log("Loading GUI of Draft module... done\n");
 

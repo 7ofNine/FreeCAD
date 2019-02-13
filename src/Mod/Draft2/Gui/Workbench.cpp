@@ -24,48 +24,58 @@
 #include "Gui/MenuManager.h"
 #include "Gui/ToolBarManager.h"
 
-using namespace Draft2Gui;
+//using namespace Draft2Gui;
 
 
 /// @namespace Draft2Gui @class Workbench
 TYPESYSTEM_SOURCE(Draft2Gui::Workbench, Gui::StdWorkbench)
 
-
-Workbench::Workbench(){}
-
-Workbench::~Workbench(){}
+namespace Draft2Gui {
 
 
-Gui::MenuItem* Workbench::setupMenuBar() const
-{
-    Gui::MenuItem* const root = StdWorkbench::setupMenuBar();
-    Gui::MenuItem* const item = root->findItem("&Windows");
+    Workbench::Workbench() {}
 
-    Gui::MenuItem * draft = new Gui::MenuItem;
+    Workbench::~Workbench() {}
 
-    draft->setCommand("&Draft");
-    *draft << "Draft_MakeLine"
-           << "Draft_MakeWire";
 
-    root->insertItem(item, draft);
-    return root;
+    Gui::MenuItem* Workbench::setupMenuBar() const
+    {
+        Gui::MenuItem* const root = StdWorkbench::setupMenuBar();
+        Gui::MenuItem* const item = root->findItem("&Windows");
+
+        Gui::MenuItem* draft = new Gui::MenuItem;
+
+        draft->setCommand("&Draft");
+        *draft << "Draft_MakeLine"
+            << "Draft_MakeWire";
+
+        root->insertItem(item, draft);
+
+        // uitility comands
+        Gui::MenuItem* utilities = new Gui::MenuItem;
+        utilities->setCommand("&Utilities");
+        *utilities << "Draft_SelectPlane";
+        root->insertItem(item, utilities);
+
+        return root;
+    }
+
+    Gui::ToolBarItem* Workbench::setupToolBars() const
+    {
+        Gui::ToolBarItem* const root = StdWorkbench::setupToolBars();
+
+        Gui::ToolBarItem* const draftTools = new Gui::ToolBarItem(root);
+        draftTools->setCommand("Draft Tools");
+
+        *draftTools << "Draft_MakeLine"
+            << "Draft_MakeWire";
+
+        return root;
+    }
+
+    Gui::ToolBarItem* Workbench::setupCommandBars() const
+    {
+        return NULL;
+    }
+
 }
-
-Gui::ToolBarItem*  Workbench::setupToolBars() const
-{
-    Gui::ToolBarItem* const root = StdWorkbench::setupToolBars();
-
-    Gui::ToolBarItem* const draftTools = new Gui::ToolBarItem(root);
-    draftTools->setCommand("Draft Tools");
-
-    *draftTools << "Draft_MakeLine"
-                << "Draft_MakeWire";
-
-    return root;
-}
-
-Gui::ToolBarItem*  Workbench::setupCommandBars() const
-{
-    return NULL;
-}
-

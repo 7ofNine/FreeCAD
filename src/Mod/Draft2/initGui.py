@@ -26,12 +26,12 @@
 
 # This file is freely derived from the original plain Python version of the Draft module
 
-class DraftWorkbench ( Workbench ):
-    "Part workbench object"
+class Draft2Workbench ( Workbench ):
+    "Draft 2 workbench object"
     def __init__(self):
         self.__class__.Icon = FreeCAD.getResourceDir() + "Mod/Draft2/Resources/icons/DraftWorkbench.svg"
-        self.__class__.MenuText = "Draft"
-        self.__class__.ToolTip = "Draft workbench"
+        self.__class__.MenuText = "Draft 2"
+        self.__class__.ToolTip = "Draft workbench 2"
 
     def Initialize(self):
         # load the module
@@ -41,6 +41,6 @@ class DraftWorkbench ( Workbench ):
 
 
     def GetClassName(self):
-        return "DraftGui::Workbench"
+        return "Draft2Gui::Workbench"
 
-Gui.addWorkbench(DraftWorkbench())
+Gui.addWorkbench(Draft2Workbench())

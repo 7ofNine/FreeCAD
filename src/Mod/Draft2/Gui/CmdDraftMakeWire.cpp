@@ -24,9 +24,11 @@
 
 #include "QGlobalStatic"
 
-using namespace DraftGui;
+//using namespace Draft2Gui;
 
-namespace DraftGui {
+namespace Draft2Gui {
+
+
     CmdDraftMakeWire::CmdDraftMakeWire()
         :Command("Draft_MakeWire")
     {
@@ -37,7 +39,7 @@ namespace DraftGui {
         sWhatsThis = getName();
         sStatusTip = sToolTipText;
         sPixmap = "Draft_Wire";
-        sAccel = "W,I";
+        sAccel = "W, I";
     }
 
     void CmdDraftMakeWire::activated(int)
@@ -45,9 +47,11 @@ namespace DraftGui {
 
     }
 
+    // determins if command is active/greyed out.
+    // this can be any type of condition
     bool CmdDraftMakeWire::isActive(void)
     {
-        return false;
+        return hasActiveDocument(); // active when there is an active document
     }
 
 }

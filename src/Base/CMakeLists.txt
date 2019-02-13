@@ -21,7 +21,7 @@ if(MSVC)
     set(FreeCADBase_LIBS
         ${Boost_LIBRARIES}
         ${PYTHON_LIBRARIES}
-        debug ${XercesC_DEBUG_LIBRARIES}
+#        debug ${XercesC_DEBUG_LIBRARIES}
         optimized ${XercesC_LIBRARIES}
         ${ZLIB_LIBRARIES}
         debug MSVCRTD.LIB
