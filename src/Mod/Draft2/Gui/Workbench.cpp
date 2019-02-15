@@ -51,11 +51,12 @@ namespace Draft2Gui {
 
         root->insertItem(item, draft);
 
-        // uitility comands
+        // uitility commands
         Gui::MenuItem* utilities = new Gui::MenuItem;
-        utilities->setCommand("&Utilities");
+        utilities->setCommand("Utilities");
         *utilities << "Draft_SelectPlane";
-        root->insertItem(item, utilities);
+
+        *draft << utilities;
 
         return root;
     }
