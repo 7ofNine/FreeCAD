@@ -1,5 +1,3 @@
-# set project name. Temporary to be able to easily change it
-# SET(GUT_DRAFT_APP "Draft2")
 
 include_directories(
     ${CMAKE_CURRENT_SOURCE_DIR}
@@ -9,17 +7,17 @@ include_directories(
 )
 
 
-# Gui resources fro QT
+# Gui resources for QT
 if (BUILD_QT5)
-    qt5_add_resources(PartGui_QRC_SRCS Resources/Draft.qrc)
+    qt5_add_resources(Draft2Gui_QRC_SRCS Resources/Draft.qrc)
 else()
-    qt4_add_resources(PartGui_QRC_SRCS Resources/Draft.qrc)
+    qt4_add_resources(Draft2Gui_QRC_SRCS Resources/Draft.qrc)
 endif()
 
 
 # Source files
 set(Draft2Gui_SOURCES 
-    ${PartGui_QRC_SRCS}   
+    ${Draft2Gui_QRC_SRCS}   
     Workbench.cpp
     AppDraftGui.cpp
     CmdDraftMakeLine.cpp
