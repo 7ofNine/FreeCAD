@@ -4,7 +4,7 @@
 ; http://www.freecadweb.org/wiki/index.php?title=Material
 
 [FCMat]
-Name = [DE]St E 255
+Name = St E 255
 NameDE = St E 255
 Father = Metal
 YoungsModulus = 210000 MPa
@@ -15,7 +15,7 @@ KindOfMaterial = Fine grain steel
 KindOfMaterialDE = Feinkornstahl
 MaterialNumber = 1.0461
 Norm = DIN 17102
-ShearModulus = 81000
+ShearModulus = 81000 MPa
 ThermalExpansionCoefficient = 0.000011 m/m/K
 UltimateStrain = 0
 YieldStrength = 260 MPa

@@ -418,7 +418,7 @@ class DraftToolBar:
         if hide:
             button.hide()
         if icon:
-            button.setIcon(QtGui.QIcon(':/icons/'+icon+'.svg'))
+            button.setIcon(QtGui.QIcon.fromTheme(icon, QtGui.QIcon(':/icons/'+icon+'.svg')))
             button.setIconSize(QtCore.QSize(isize, isize))
         if checkable:
             button.setCheckable(True)
@@ -1987,7 +1987,8 @@ class DraftToolBar:
         if value == None:
             self.autogroup = None
             self.autoGroupButton.setText("None")
-            self.autoGroupButton.setIcon(QtGui.QIcon(':/icons/Draft_AutoGroup_off.svg'))
+            self.autoGroupButton.setIcon(QtGui.QIcon.fromTheme('Draft_AutoGroup_off',
+                                                               QtGui.QIcon(':/icons/Draft_AutoGroup_off.svg')))
             self.autoGroupButton.setToolTip(translate("draft", "Autogroup off"))
             self.autoGroupButton.setDown(False)
         else:
@@ -1995,13 +1996,15 @@ class DraftToolBar:
             if obj:
                 self.autogroup = value
                 self.autoGroupButton.setText(obj.Label)
-                self.autoGroupButton.setIcon(QtGui.QIcon(':/icons/Draft_AutoGroup_on.svg'))
+                self.autoGroupButton.setIcon(QtGui.QIcon.fromTheme('Draft_AutoGroup_on',
+                                                                   QtGui.QIcon(':/icons/Draft_AutoGroup_on.svg')))
                 self.autoGroupButton.setToolTip(translate("draft", "Autogroup: ")+obj.Label)
                 self.autoGroupButton.setDown(False)
             else:
                 self.autogroup = None
                 self.autoGroupButton.setText("None")
-                self.autoGroupButton.setIcon(QtGui.QIcon(':/icons/Draft_AutoGroup_off.svg'))
+                self.autoGroupButton.setIcon(QtGui.QIcon.fromTheme('Draft_AutoGroup_off',
+                                                                   QtGui.QIcon(':/icons/Draft_AutoGroup_off.svg')))
                 self.autoGroupButton.setToolTip(translate("draft", "Autogroup off"))
                 self.autoGroupButton.setDown(False)
 
@@ -2457,42 +2460,88 @@ class ShapeStringTaskPanel:
         self.task.leString.setText(self.stringText)
         self.task.fcFontFile.setFileName(Draft.getParam("FontFile",""))
         self.fileSpec = Draft.getParam("FontFile","")
+        self.point = FreeCAD.Vector(0.0,0.0,0.0)
+        self.pointPicked = False
 
         QtCore.QObject.connect(self.task.fcFontFile,QtCore.SIGNAL("fileNameSelected(const QString&)"),self.fileSelect)
+        QtCore.QObject.connect(self.task.pbReset,QtCore.SIGNAL("clicked()"),self.resetPoint)
+        self.point = None
+        self.view = Draft.get3DView()
+        self.call = self.view.addEventCallback("SoEvent",self.action)
+        FreeCAD.Console.PrintMessage(translate("draft", "Pick ShapeString location point:")+"\n")
+
 
     def fileSelect(self, fn):
         self.fileSpec = fn
 
-    def accept(self):
-        FreeCAD.ActiveDocument.openTransaction("ShapeString")
-        qr,sup,points,fil = self.sourceCmd.getStrings()
-        height = FreeCAD.Units.Quantity(self.task.sbHeight.text()).Value
-        ss = Draft.makeShapeString(str(self.task.leString.text()),  ##needs to be bytes for Py3!
-                                   str(self.fileSpec),
-                                   height,
-                                   0.0)
+    def resetPoint(self):
+        self.pointPicked = False
+        origin = FreeCAD.Vector(0.0,0.0,0.0)
+        self.setPoint(origin)
 
+    def action(self,arg):
+        "scene event handler"
+        import DraftTools
+        if arg["Type"] == "SoKeyboardEvent":
+            if arg["Key"] == "ESCAPE":
+                self.reject()
+        elif arg["Type"] == "SoLocation2Event": #mouse movement detection
+            self.point,ctrlPoint,info = DraftTools.getPoint(self.sourceCmd,arg,noTracker=True)
+            if not self.pointPicked:
+                self.setPoint(self.point)
+        elif arg["Type"] == "SoMouseButtonEvent":
+            if (arg["State"] == "DOWN") and (arg["Button"] == "BUTTON1"):
+                self.setPoint(self.point)
+                self.pointPicked = True
+
+    def setPoint(self, point):
+        self.task.sbX.setProperty('rawValue',point.x)
+        self.task.sbY.setProperty('rawValue',point.y)
+        self.task.sbZ.setProperty('rawValue',point.z)
+
+    def createObject(self):
+        "creates object in the current doc"
+        dquote = '"'
+        if sys.version_info.major < 3: # Python3: no more unicode
+            String  = 'u' + dquote + str(self.task.leString.text().encode('unicode_escape')) + dquote
+        else:
+            String  = dquote + self.task.leString.text() + dquote
+        FFile = dquote + str(self.fileSpec) + dquote
+
+        Size = str(FreeCAD.Units.Quantity(self.task.sbHeight.text()).Value)
+        Tracking = str(0.0)
         x = FreeCAD.Units.Quantity(self.task.sbX.text()).Value
         y = FreeCAD.Units.Quantity(self.task.sbY.text()).Value
         z = FreeCAD.Units.Quantity(self.task.sbZ.text()).Value
         ssBase = FreeCAD.Vector(x,y,z)
-        plm=FreeCAD.Placement()
-        plm.Base = ssBase
-        elements = qr[1:-1].split(",")  #string to tuple
-        mytuple = tuple(elements)       #to prevent
-        plm.Rotation.Q = mytuple        #PyCXX: Error creating object of type N2Py5TupleE from '(0.0,-0.0,-0.0,1.0)'
-        ss.Placement=plm
-        if sup:
-            ss.Support = FreeCAD.ActiveDocument.getObject(sup)
-        Draft.autogroup(ss)
-        FreeCAD.ActiveDocument.commitTransaction()
+        # this try block is almost identical to the one in DraftTools
+        try: 
+            qr,sup,points,fil = self.sourceCmd.getStrings()
+            FreeCADGui.addModule("Draft")
+            self.sourceCmd.commit(translate("draft","Create ShapeString"),
+    ['ss=Draft.makeShapeString(String='+String+',FontFile='+FFile+',Size='+Size+',Tracking='+Tracking+')',
+                         'plm=FreeCAD.Placement()',
+                         'plm.Base='+DraftVecUtils.toString(ssBase),
+                         'plm.Rotation.Q='+qr,
+                         'ss.Placement=plm',
+                         'ss.Support='+sup,
+                         'Draft.autogroup(ss)'])
+        except Exception as e:
+            FreeCAD.Console.PrintError("Draft_ShapeString: error delaying commit\n")
 
-        FreeCAD.ActiveDocument.recompute()
+    def accept(self):
+        self.createObject();
+        if self.call: self.view.removeEventCallback("SoEvent",self.call)
         FreeCADGui.ActiveDocument.resetEdit()
+        FreeCADGui.Snapper.off()
+        self.sourceCmd.creator.finish(self.sourceCmd)
         return True
 
     def reject(self):
+        if self.call: self.view.removeEventCallback("SoEvent",self.call)
         FreeCADGui.ActiveDocument.resetEdit()
+        FreeCADGui.Snapper.off()
+        self.sourceCmd.creator.finish(self.sourceCmd)
         return True
 
 if not hasattr(FreeCADGui,"draftToolBar"):

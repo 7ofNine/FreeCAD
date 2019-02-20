@@ -1,10 +1,10 @@
-; Steel-St 37-2K
+; Steel-St-37-2K
 ; (c) 2014 M. Münch - GNU Lesser General Public License (LGPL)
 ; information about the content of this card can be found here:
 ; http://www.freecadweb.org/wiki/index.php?title=Material
 
 [FCMat]
-Name = [DE]St 37-2K
+Name = St 37-2K
 NameDE = St 37-2K
 DescriptionDE = mäßige Beanspruchung
 Father = Metal
@@ -16,7 +16,7 @@ KindOfMaterial = Mild steel
 KindOfMaterialDE = Baustahl
 MaterialNumber = 1.0161
 Norm = EN 10025
-ShearModulus = 81000
+ShearModulus = 81000 MPa
 ThermalExpansionCoefficient = 0.000011 m/m/K
 UltimateStrain = 0
 YieldStrength = 320 MPa

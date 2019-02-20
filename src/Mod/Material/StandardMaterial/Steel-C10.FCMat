@@ -4,7 +4,7 @@
 ; http://www.freecadweb.org/wiki/index.php?title=Material
 
 [FCMat]
-Name = [DE]C10
+Name = C10
 NameDE = C10
 Father = Metal
 YoungsModulus = 210000 MPa
@@ -15,7 +15,7 @@ KindOfMaterial = Case-hardened steel
 KindOfMaterialDE = Einsatzstahl
 MaterialNumber = 1.0301
 Norm = DIN 17210
-ShearModulus = 81000
+ShearModulus = 81000 MPa
 ThermalExpansionCoefficient = 0.000011 m/m/K
 UltimateStrain = 16
 YieldStrength = 380 MPa

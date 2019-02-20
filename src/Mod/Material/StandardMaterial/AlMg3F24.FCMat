@@ -4,7 +4,7 @@
 ; http://www.freecadweb.org/wiki/index.php?title=Material
 
 [FCMat]
-Name = [DE]AlMg3F24
+Name = AlMg3F24
 NameDE = AlMg3F24
 Father = Metal
 YoungsModulus = 70000 MPa
@@ -15,7 +15,7 @@ KindOfMaterial = Aluminium
 KindOfMaterialDE = Aluminium
 MaterialNumber = 3.3535.26
 Norm = DIN 1725
-ShearModulus = 27000
+ShearModulus = 27000 MPa
 ThermalExpansionCoefficient = 0.000023 m/m/K
 UltimateStrain = 5
 YieldStrength = 180 MPa
