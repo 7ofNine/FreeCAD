@@ -34,6 +34,11 @@ namespace Draft2Gui {
     // standard creation commands
     DEF_STD_CMD_A(CmdDraftMakeLine);
     DEF_STD_CMD_A(CmdDraftMakeWire);
-
+    DEF_STD_CMD_A(CmdDraftBSpline);
+    DEF_STD_CMD_A(CmdDraftCircle);
+    DEF_STD_CMD_A(CmdDraftEllipse);
+    DEF_STD_CMD_A(cmdDraftArc);
+    DEF_STD_CMD_A(CmdDraftPolygon);
+    DEF_STD_CMD_A(CmdDraftRectangle);
 }
 #endif
