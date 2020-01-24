@@ -153,13 +153,13 @@ void CmdCreateImagePlane::activated(int iMsg)
         QString pyfile = Base::Tools::escapeEncodeFilename(s);
 
         openCommand("Create ImagePlane");
-        doCommand(Doc,"App.activeDocument().addObject('Image::ImagePlane','%s\')",FeatName.c_str());
-        doCommand(Doc,"App.activeDocument().%s.ImageFile = '%s'",FeatName.c_str(),(const char*)pyfile.toUtf8());
-        doCommand(Doc,"App.activeDocument().%s.XSize = %d",FeatName.c_str(),nWidth);
-        doCommand(Doc,"App.activeDocument().%s.YSize = %d",FeatName.c_str(),nHeight);
-        doCommand(Doc,"App.activeDocument().%s.Placement = App.Placement(App.Vector(%f,%f,%f),App.Rotation(%f,%f,%f,%f))"
-                     ,FeatName.c_str(),p.x,p.y,p.z,r[0],r[1],r[2],r[3]);
-        doCommand(Doc,"Gui.SendMsgToActiveView('ViewFit')");
+        doCommand(Doc, "App.activeDocument().addObject('Image::ImagePlane','%s\')",FeatName.c_str());
+        doCommand(Doc, "App.activeDocument().%s.XSize = %d", FeatName.c_str(), nWidth);
+        doCommand(Doc, "App.activeDocument().%s.YSize = %d", FeatName.c_str(), nHeight);
+        doCommand(Doc, "App.activeDocument().%s.Placement = App.Placement(App.Vector(%f,%f,%f),App.Rotation(%f,%f,%f,%f))"
+                     ,FeatName.c_str(),p.x,p.y,p.z,r[0],r[1],r[2],r[3]); 
+        doCommand(Doc, "App.activeDocument().%s.ImageFile = '%s'",FeatName.c_str(),(const char*)pyfile.toUtf8()); // put file name last. Avoids multiple loads of image file
+        doCommand(Doc, "Gui.SendMsgToActiveView('ViewFit')");
         commitCommand();
     }
 }

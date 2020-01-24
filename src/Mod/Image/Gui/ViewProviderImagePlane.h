@@ -52,6 +52,7 @@ public:
 
 private:
     bool loadSvg(const char*, float x, float y, QImage& img);
+    bool loadImage(std::string const & fileName, float const & x, float const & y);
 
 protected:
     SoCoordinate3         * pcCoords;
